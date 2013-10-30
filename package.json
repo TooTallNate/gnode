@@ -1,0 +1,35 @@
+{
+  "name": "gnode",
+  "version": "0.0.0",
+  "description": "Run node with ES6 Generators",
+  "main": "index.js",
+  "bin": "bin/gnode",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/TooTallNate/gnode.git"
+  },
+  "keywords": [
+    "node",
+    "generators",
+    "es6",
+    "facebook",
+    "regenerator",
+    "co"
+  ],
+  "author": "Nathan Rajlich <nathan@tootallnate.net> (http://n8.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TooTallNate/gnode/issues"
+  },
+  "dependencies": {
+    "regenerator": "~0.2.5"
+  },
+  "devDependencies": {
+    "co": "~2.1.0",
+    "mocha": "~1.13.0",
+    "suspend": "~0.3.0"
+  }
+}

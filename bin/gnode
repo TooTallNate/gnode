@@ -1,0 +1,69 @@
+#!/usr/bin/env node
+
+var spawn = require('child_process').spawn;
+var node = process.execPath;
+
+// first check if the current node executable has "Generators".
+// if not, fall back to facebook/regenerator for Generators support.
+hasGenerators(function (err, has) {
+  if (err) throw err;
+
+  // build up the node(1) arguments for Generator support
+  var argv = (process.execArgv || []).slice(0);
+
+  if ('flag' == has && -1 == argv.indexOf('--harmony_generators')) {
+    // if the node process natively supports Generators,
+    // then add the --harmony_generators flag
+    argv.push('--harmony_generators');
+  }
+
+  var argsStart = 2;
+  if (!has) {
+    // no Generator support, then we need to load fallback.js first
+    argsStart = 3;
+    argv.push(require('path').resolve(__dirname, '..', 'fallback.js'));
+    process.env.GNODE_ENTRY_POINT = process.argv[2];
+  }
+
+  // add the rest of the arguments specified by the user
+  argv.push.apply(argv, process.argv.slice(argsStart));
+  //console.error(argv);
+
+  var opts = {
+    customFds: [ 0, 1, 2 ],
+    stdio: 'inherit'
+  };
+
+  // spawn a new node process with the necessary flags
+  spawn(node, argv, opts);
+});
+
+
+/**
+ * Async function that returns `true`/`false` for if Generators are
+ * supported by V8.
+ *
+ * @api private
+ */
+
+function hasGenerators (fn) {
+  var cp = spawn(node, [ '--v8-options' ]);
+  var data = '';
+
+  function onerror (e) {
+    fn(e);
+  }
+  function ondata (b) {
+    data += b;
+  }
+  function onend () {
+    cp.removeListener('error', onerror);
+    var has = -1 != data.indexOf('--harmony_generators');
+    fn(null, has ? 'flag' : false);
+  }
+
+  cp.on('error', onerror);
+  cp.stdout.setEncoding('utf8');
+  cp.stdout.on('data', ondata);
+  cp.stdout.on('end', onend);
+}
