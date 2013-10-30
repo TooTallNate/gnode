@@ -11,7 +11,7 @@ hasGenerators(function (err, has) {
   // build up the node(1) arguments for Generator support
   var argv = (process.execArgv || []).slice(0);
 
-  if ('flag' == has && -1 == argv.indexOf('--harmony_generators')) {
+  if (has && -1 == argv.indexOf('--harmony_generators')) {
     // if the node process natively supports Generators,
     // then add the --harmony_generators flag
     argv.push('--harmony_generators');
@@ -59,7 +59,7 @@ function hasGenerators (fn) {
   function onend () {
     cp.removeListener('error', onerror);
     var has = -1 != data.indexOf('--harmony_generators');
-    fn(null, has ? 'flag' : false);
+    fn(null, has);
   }
 
   cp.on('error', onerror);
