@@ -27,6 +27,7 @@ if (process._eval != null) {
   if (process._forceRepl || require('tty').isatty(0)) {
     // REPL
     var opts = {
+      eval: gnodeEval,
       useGlobal: true,
       ignoreUndefined: false
     };
@@ -58,7 +59,33 @@ if (process._eval != null) {
   }
 }
 
-// copied directly from joyent/node's src/node.js
+// custom eval() function for the REPL, that first compiles
+var compileOpts = {
+  includeRuntime: true
+};
+function gnodeEval (code, context, file, fn) {
+  var err, result;
+  try {
+    // compile JS via facebook/regenerator
+    code = regenerator(code, compileOpts);
+
+    if (this.useGlobal) {
+      result = vm.runInThisContext(code, file);
+    } else {
+      result = vm.runInContext(code, context, file);
+    }
+  } catch (e) {
+    err = e;
+  }
+
+  // after the first regenerator() call, we can turn off the
+  // `includeRuntime` option since it gets included in the global scope
+  compileOpts.includeRuntime = false;
+
+  fn(err, result);
+}
+
+// copied (almost) directly from joyent/node's src/node.js
 function evalScript (name) {
   var Module = require('module');
   var path = require('path');
