@@ -40,3 +40,5 @@ require('gnode');
 var gen = require('./someGenerator');
 // etc…
 ```
+
+[regenerator]: https://github.com/facebook/regenerator
