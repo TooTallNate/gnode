@@ -1,4 +1,11 @@
 
+0.0.3 / 2013-10-31
+==================
+
+  * gnode: avoid adding the --harmony_generators flag when not supported
+  * fallback: set `process.execPath` and `process.argv[0]` to the gnode binary
+  * fallback, index: include the regenerator runtime immediately
+
 0.0.2 / 2013-10-30
 ==================
 
