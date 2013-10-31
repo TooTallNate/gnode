@@ -60,14 +60,13 @@ if (process._eval != null) {
 }
 
 // custom eval() function for the REPL, that first compiles
-var compileOpts = {
-  includeRuntime: true
-};
 function gnodeEval (code, context, file, fn) {
   var err, result;
   try {
     // compile JS via facebook/regenerator
-    code = regenerator(code, compileOpts);
+    code = regenerator(code, {
+      includeRuntime: 'function' != typeof wrapGenerator
+    });
 
     if (this.useGlobal) {
       result = vm.runInThisContext(code, file);
@@ -77,10 +76,6 @@ function gnodeEval (code, context, file, fn) {
   } catch (e) {
     err = e;
   }
-
-  // after the first regenerator() call, we can turn off the
-  // `includeRuntime` option since it gets included in the global scope
-  compileOpts.includeRuntime = false;
 
   fn(err, result);
 }
@@ -98,7 +93,7 @@ function evalScript (name) {
 
   // compile JS via facebook/regenerator
   script = regenerator(script, {
-    includeRuntime: true
+    includeRuntime: 'function' != typeof wrapGenerator
   });
 
   if (!Module._contextLoad) {

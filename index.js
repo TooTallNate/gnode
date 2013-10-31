@@ -7,6 +7,14 @@ var fs = require('fs');
 var regenerator = require('regenerator');
 
 /**
+ * First include the regenerator runtime. It get's installed gloablly as
+ * `wrapGenerator`, so we just need to make sure that global function is
+ * available.
+ */
+
+require('vm').runInThisContext(regenerator('', { includeRuntime: true }));
+
+/**
  * Entry point for node versions that don't have Generator support.
  *
  * This file replaces the default `.js` require.extensions implementation with
@@ -17,20 +25,14 @@ var regenerator = require('regenerator');
 
 require.extensions['.js'] = gnodeJsExtensionCompiler;
 
-var compileOpts = {
-  includeRuntime: true
-};
-
 function gnodeJsExtensionCompiler (module, filename) {
   var content = fs.readFileSync(filename, 'utf8');
   content = stripBOM(content);
 
   // compile JS via facebook/regenerator
-  content = regenerator(content, compileOpts);
-
-  // after the first regenerator() call, we can turn off the
-  // `includeRuntime` option since it gets included in the global scope
-  compileOpts.includeRuntime = false;
+  content = regenerator(content, {
+    includeRuntime: 'function' != typeof wrapGenerator
+  });
 
   module._compile(content, filename);
 }
