@@ -22,6 +22,8 @@ hasGenerators(function (err, has) {
     // no Generator support, then we need to load fallback.js first
     argsStart = 3;
     argv.push(require('path').resolve(__dirname, '..', 'fallback.js'));
+
+    // store a reference to the entry point, so that fallback.js can pick it up
     process.env.GNODE_ENTRY_POINT = process.argv[2];
   }
 
