@@ -65,7 +65,6 @@ v0.8.26
 v0.10.21
 
 ☮ ~ (master) ∴ gnode t.js
-u
 0
 1
 2
