@@ -1,4 +1,10 @@
 
+0.0.2 / 2013-10-30
+==================
+
+  * fallback: add proper REPL support
+  * fallback: add stdin piping support
+
 0.0.1 / 2013-10-30
 ==================
 
