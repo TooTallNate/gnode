@@ -12,6 +12,10 @@ delete process.env.GNODE_ENTRY_POINT;
 // load the custom `.js` ES6 Generator compiler
 require('./index.js');
 
+// overwrite process.execPath and process.argv[0] with the
+// absolute path to the gnode binary
+process.execPath = process.argv[0] = require('path').resolve(__dirname, 'bin', 'gnode');
+
 if (process._eval != null) {
   // User passed '-e' or '--eval' arguments to Node.
   evalScript('[eval]');
