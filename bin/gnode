@@ -2,6 +2,7 @@
 
 var spawn = require('child_process').spawn;
 var node = process.execPath || process.argv[0];
+var HG = '--harmony_generators';
 
 // first check if the current node executable has "Generators".
 // if not, fall back to facebook/regenerator for Generators support.
@@ -11,10 +12,10 @@ hasGenerators(function (err, has) {
   // build up the node(1) arguments for Generator support
   var argv = (process.execArgv || []).slice(0);
 
-  if (has && -1 == argv.indexOf('--harmony_generators')) {
+  if (has && -1 == argv.indexOf(HG)) {
     // if the node process natively supports Generators,
     // then add the --harmony_generators flag
-    argv.push('--harmony_generators');
+    argv.push(HG);
   }
 
   var argsStart = 2;
@@ -62,7 +63,7 @@ function hasGenerators (fn) {
   }
   function onend () {
     cp.removeListener('error', onerror);
-    var has = -1 != data.indexOf('--harmony_generators');
+    var has = -1 != data.indexOf(HG);
     fn(null, has);
   }
 
