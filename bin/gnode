@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var spawn = require('child_process').spawn;
-var node = process.execPath;
+var node = process.execPath || process.argv[0];
 
 // first check if the current node executable has "Generators".
 // if not, fall back to facebook/regenerator for Generators support.
