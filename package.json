@@ -1,6 +1,6 @@
 {
   "name": "gnode",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Run node with ES6 Generators",
   "main": "index.js",
   "bin": "bin/gnode",
