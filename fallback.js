@@ -27,7 +27,7 @@ if (process._eval != null) {
   if (process._forceRepl || require('tty').isatty(0)) {
     // REPL
     var opts = {
-      eval: gnodeEval,
+      'eval': gnodeEval,
       useGlobal: true,
       ignoreUndefined: false
     };
