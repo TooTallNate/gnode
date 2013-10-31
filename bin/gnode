@@ -12,12 +12,6 @@ hasGenerators(function (err, has) {
   // build up the node(1) arguments for Generator support
   var argv = (process.execArgv || []).slice(0);
 
-  if (has && -1 == argv.indexOf(HG)) {
-    // if the node process natively supports Generators,
-    // then add the --harmony_generators flag
-    argv.push(HG);
-  }
-
   // process the regular arguments. if any of them begin with a hyphen (-) then
   // it's a switch and should be added *before* the ENTRY_POINT in the argv...
   var argsStart = 2;
@@ -25,12 +19,20 @@ hasGenerators(function (err, has) {
     var arg = process.argv[i];
     var isFlag = '-' == arg[0];
     if (isFlag) {
-      argv.push(arg);
+      if (!/^--harmony[_-]generators$/.test(arg)) {
+        argv.push(arg);
+      }
       argsStart++;
     } else {
       // must be the script file
       break;
     }
+  }
+
+  if (has && -1 == argv.indexOf(HG) && -1 == argv.indexOf('--harmony-generators')) {
+    // if the node process natively supports Generators,
+    // then add the --harmony_generators flag
+    argv.push(HG);
   }
 
   if (!has) {
