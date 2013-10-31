@@ -28,8 +28,8 @@ function gnodeJsExtensionCompiler (module, filename) {
   // compile JS via facebook/regenerator
   content = regenerator(content, compileOpts);
 
-  // after the first regenerator() call, we can turn
-  // off the `includeRuntime` option
+  // after the first regenerator() call, we can turn off the
+  // `includeRuntime` option since it gets included in the global scope
   compileOpts.includeRuntime = false;
 
   module._compile(content, filename);
