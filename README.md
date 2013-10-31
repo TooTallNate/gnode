@@ -1,6 +1,6 @@
 gnode
 =====
-### Run node with ES6 Generators
+### Run node with ES6 Generators, today!
 
 `gnode` is a very light wrapper around your `node` executable that ensures
 [ES6 Generator][generators] support, even on version of node that do not
