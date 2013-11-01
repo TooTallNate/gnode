@@ -40,7 +40,7 @@ hasGenerators(function (err, has) {
     argv.push(require('path').resolve(__dirname, '..', 'fallback.js'));
 
     // store a reference to the entry point, so that fallback.js can pick it up
-    if (process.argv.length >= 3) {
+    if (process.argv.length > argsStart) {
       process.env.GNODE_ENTRY_POINT = process.argv[argsStart];
     }
 
