@@ -52,7 +52,10 @@ hasGenerators(function (err, has) {
     argv.push.apply(argv, process.argv.slice(argsStart));
   }
 
-  //console.error(argv);
+  if (parseInt(process.env.GNODE_PRINT_ARGS, 10)) {
+    // print out the arguments that will be passed in for debugging purposes
+    console.error(argv);
+  }
 
   var opts = {
     customFds: [ 0, 1, 2 ],
