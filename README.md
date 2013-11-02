@@ -3,7 +3,7 @@ gnode
 ### Run node with ES6 Generators, today!
 
 `gnode` is a very light wrapper around your `node` executable that ensures
-[ES6 Generator][generators] support, even on version of node that do not
+[ES6 Generator][generators] support, even on versions of node that do not
 support ES6 Generators natively. Support for generators happens either through
 V8's native support (via the `--harmony_generators` flag when necessary,
 on node >= v0.11.3), or falling back to [`facebook/regenerator`][regenerator]
