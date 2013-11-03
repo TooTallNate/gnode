@@ -10,7 +10,7 @@ V8's native support (via the `--harmony_generators` flag when necessary,
 on node >= v0.11.3), or falling back to [`facebook/regenerator`][regenerator]
 emulation when no native support is available (node < v0.11.3).
 
-With this program you can use [`co`][co] or [`suspend`][suspend], or any other
+With `gnode` you can use [`co`][co] or [`suspend`][suspend], or any other
 Generator-based flow control based module, today!
 
 
