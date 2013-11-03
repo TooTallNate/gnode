@@ -13,7 +13,10 @@ var spawn = require('child_process').spawn;
 var node = process.execPath || process.argv[0];
 var gnode = path.resolve(__dirname, '..', 'bin', 'gnode');
 
-describe('gnode CLI', function () {
+// chdir() to the "test" dir, so that relative test filenames work as expected
+process.chdir(path.resolve(__dirname, 'cli'));
+
+describe('command line interface', function () {
 
   this.slow(1000);
   this.timeout(2000);
@@ -33,14 +36,38 @@ describe('gnode CLI', function () {
     });
   });
 
-  //cli([ ], '', function (child, done) {
-  //});
+  cli([ 'check.js' ], 'should quit with a SUCCESS exit code', function (child, done) {
+    child.on('exit', function (code) {
+      assert(code == 0, 'gnode quit with exit code: ' + code);
+      done();
+    });
+  });
+
+  cli([ 'nonexistant.js' ], 'should quit with a FAILURE exit code', function (child, done) {
+    child.on('exit', function (code) {
+      assert(code != 0, 'gnode quit with exit code: ' + code);
+      done();
+    });
+  });
+
+  cli([ '--harmony_generators', 'check.js' ], 'should not output the "unrecognized flag" warning', function (child, done) {
+    var async = 2;
+    buffer(child.stderr, function (err, data) {
+      if (err) return done(err);
+      assert(!/unrecognized flag/.test(data), 'got stderr data: ' + JSON.stringify(data));
+      --async || done();
+    });
+    child.on('exit', function (code) {
+      assert(code == 0, 'gnode quit with exit code: ' + code);
+      --async || done();
+    });
+  });
 
 });
 
 
 function cli (argv, name, fn) {
-  describe(argv.join(' '), function () {
+  describe('gnode ' + argv.join(' '), function () {
     it(name, function (done) {
       var child = spawn(node, [ gnode ].concat(argv));
       fn(child, done);
