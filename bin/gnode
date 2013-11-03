@@ -63,9 +63,31 @@ hasGenerators(function (err, has) {
   };
 
   // spawn a new node process with the necessary flags
-  spawn(node, argv, opts);
+  var child = spawn(node, argv, opts);
+  child.on('exit', onexit);
 });
 
+/**
+ * Main node subprocess "exit" event handler.
+ * Proxies the exit code up to this process.
+ *
+ * @api private
+ */
+
+function onexit(code, signal) {
+  if (signal) {
+    process.kill(process.pid, signal);
+  } else if (0 !== code) {
+    if (null == process.exitCode) {
+      // old node, no `process.exitCode` support...
+      process.exit(code);
+    } else {
+      // newer node, we can set `process.exitCode`
+      // and let the process exit naturally
+      process.exitCode = code;
+    }
+  }
+}
 
 /**
  * Async function that returns `true`/`false` for if Generators are
