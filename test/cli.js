@@ -7,6 +7,7 @@
 
 var path = require('path');
 var assert = require('assert');
+var semver = require('semver');
 var spawn = require('child_process').spawn;
 
 // node executable
@@ -23,8 +24,7 @@ describe('command line interface', function () {
 
   cli([ '-v' ], 'should output the version number', function (child, done) {
     buffer(child.stdout, function (err, data) {
-      // TODO: use "semver" module to test for realz
-      assert('v' == data[0]);
+      assert(semver.valid(data.trim()));
       done();
     });
   });

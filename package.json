@@ -30,6 +30,7 @@
   "devDependencies": {
     "co": "~2.1.0",
     "mocha": "~1.13.0",
+    "semver": "~2.2.1",
     "suspend": "~0.3.0"
   }
 }
