@@ -74,6 +74,19 @@ describe('command line interface', function () {
     });
   });
 
+  cli([], 'should work properly over stdin', function (child, done) {
+    child.stdin.end(
+      'var assert = require("assert");' +
+      'function *test () {};' +
+      'var t = test();' +
+      'assert("function" == typeof t.next);' +
+      'assert("function" == typeof t.throw);'
+    );
+    child.on('exit', function (code) {
+      assert(code == 0, 'gnode quit with exit code: ' + code);
+      done();
+    });
+  });
 });
 
 
