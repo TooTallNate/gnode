@@ -50,6 +50,17 @@ describe('command line interface', function () {
     });
   });
 
+  cli([ 'argv.js', '1', 'foo' ], 'should have a matching `process.argv`', function (child, done) {
+    buffer(child.stdout, function (err, data) {
+      if (err) return done(err);
+      data = JSON.parse(data);
+      assert('argv.js' == path.basename(data[1]));
+      assert('1' == data[2]);
+      assert('foo' == data[3]);
+      done();
+    });
+  });
+
   cli([ '--harmony_generators', 'check.js' ], 'should not output the "unrecognized flag" warning', function (child, done) {
     var async = 2;
     buffer(child.stderr, function (err, data) {
