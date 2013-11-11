@@ -27,6 +27,8 @@ require.extensions['.js'] = gnodeJsExtensionCompiler;
 
 function gnodeJsExtensionCompiler (module, filename) {
   var content = fs.readFileSync(filename, 'utf8');
+
+  // remove the Byte Order Marker if present
   content = stripBOM(content);
 
   // strip away the hashbang if present
