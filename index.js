@@ -31,8 +31,8 @@ function gnodeJsExtensionCompiler (module, filename) {
   // remove the Byte Order Marker if present
   content = stripBOM(content);
 
-  // strip away the hashbang if present
-  content = stripHashbang(content);
+  // strip away the shebang if present
+  content = stripShebang(content);
 
   // compile JS via facebook/regenerator
   content = regenerator(content, {
@@ -53,10 +53,8 @@ function stripBOM (content) {
   return content;
 }
 
-// strips away the "hashbang" from the source file if present
-function stripHashbang (content) {
-  if ('#!' == content.substring(0, 2)) {
-    content = content.substring(content.indexOf('\n') + 1);
-  }
-  return content;
+// strips away the "shebang" from the source file if present
+function stripShebang (content) {
+  // remove shebang (from lib/module.js)
+  return content.replace(/^\#\!.*/, '');
 }
