@@ -29,6 +29,9 @@ function gnodeJsExtensionCompiler (module, filename) {
   var content = fs.readFileSync(filename, 'utf8');
   content = stripBOM(content);
 
+  // strip away the hashbang if present
+  content = stripHashbang(content);
+
   // compile JS via facebook/regenerator
   content = regenerator(content, {
     includeRuntime: 'function' != typeof wrapGenerator
@@ -44,6 +47,14 @@ function stripBOM (content) {
   // translates it to FEFF, the UTF-16 BOM.
   if (content.charCodeAt(0) === 0xFEFF) {
     content = content.slice(1);
+  }
+  return content;
+}
+
+// strips away the "hashbang" from the source file if present
+function stripHashbang (content) {
+  if ('#!' == content.substring(0, 2)) {
+    content = content.substring(content.indexOf('\n') + 1);
   }
   return content;
 }
