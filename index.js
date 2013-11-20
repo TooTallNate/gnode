@@ -1,29 +1,45 @@
 
 /**
- * Module dependencies.
+ * Only apply the global .js require() hook if:
+ *
+ *   1) ES6 Generators are not already supported in the environment
+ *   2) The require.extensions['.js'] hook is not already patched by gnode
  */
 
-var fs = require('fs');
-var regenerator = require('regenerator');
+if (!hasNativeGenerators() && !isPatchedByGnode()) {
+
+  /**
+   * Module dependencies.
+   */
+
+  var fs = require('fs');
+  var regenerator = require('regenerator');
+
+  /**
+   * First include the regenerator runtime. It gets installed gloablly as
+   * `wrapGenerator`, so we just need to make sure that global function is
+   * available.
+   */
+
+  require('vm').runInThisContext(regenerator('', { includeRuntime: true }));
+
+  /**
+   * Entry point for node versions that don't have Generator support.
+   *
+   * This file replaces the default `.js` require.extensions implementation with
+   * one that first compiles the JavaScript code via "facebook/regenerator".
+   *
+   * Once that is in place then it loads the original entry point .js file.
+   */
+
+  require.extensions['.js'] = gnodeJsExtensionCompiler;
+}
 
 /**
- * First include the regenerator runtime. It get's installed gloablly as
- * `wrapGenerator`, so we just need to make sure that global function is
- * available.
- */
-
-require('vm').runInThisContext(regenerator('', { includeRuntime: true }));
-
-/**
- * Entry point for node versions that don't have Generator support.
+ * ES6 Generators enabled `require.extensions['.js']` hook.
  *
- * This file replaces the default `.js` require.extensions implementation with
- * one that first compiles the JavaScript code via "facebook/regenerator".
- *
- * Once that is in place then it loads the original entry point .js file.
+ * @api public
  */
-
-require.extensions['.js'] = gnodeJsExtensionCompiler;
 
 function gnodeJsExtensionCompiler (module, filename) {
   var content = fs.readFileSync(filename, 'utf8');
@@ -42,19 +58,57 @@ function gnodeJsExtensionCompiler (module, filename) {
   module._compile(content, filename);
 }
 
-// copied directly from joyent/node's lib/module.js
+/**
+ * Remove byte order marker. This catches EF BB BF (the UTF-8 BOM)
+ * because the buffer-to-string conversion in `fs.readFileSync()`
+ * translates it to FEFF, the UTF-16 BOM.
+ *
+ * Copied directly from joyent/node's lib/module.js
+ *
+ * @api private
+ */
+
 function stripBOM (content) {
-  // Remove byte order marker. This catches EF BB BF (the UTF-8 BOM)
-  // because the buffer-to-string conversion in `fs.readFileSync()`
-  // translates it to FEFF, the UTF-16 BOM.
   if (content.charCodeAt(0) === 0xFEFF) {
     content = content.slice(1);
   }
   return content;
 }
 
-// strips away the "shebang" from the source file if present
+/**
+ * Strips away the "shebang" from the source file if present.
+ *
+ * Copied directly from joyent/node's lib/module.js
+ *
+ * @api private
+ */
+
 function stripShebang (content) {
-  // remove shebang (from lib/module.js)
   return content.replace(/^\#\!.*/, '');
+}
+
+/**
+ * Tests if the environment supports ES6 Generators.
+ *
+ * @api private
+ */
+
+function hasNativeGenerators () {
+  var has = false;
+  try {
+    eval('(function*(){})');
+    has = true;
+  } catch (e) {
+  }
+  return has;
+}
+
+/**
+ * Check if require.extensions['.js'] is already patched by gnode
+ *
+ * @api private
+ */
+
+function isPatchedByGnode () {
+  return 'gnodeJsExtensionCompiler' == require.extensions['.js'].name;
 }
