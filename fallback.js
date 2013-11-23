@@ -16,13 +16,16 @@ require('./index.js');
 // absolute path to the gnode binary
 process.execPath = process.argv[0] = require('path').resolve(__dirname, 'bin', 'gnode');
 
+// remove "fallback.js" from `process.argv`
+process.argv.splice(1, 1);
+
 if (process._eval != null) {
   // User passed '-e' or '--eval' arguments to Node.
   evalScript('[eval]');
 } else if (entryPoint) {
   // replace `process.argv[1]` with the expected path value,
   // and re-run Module.runMain()
-  process.argv[1] = require('path').resolve(entryPoint);
+  process.argv.splice(1, 0, require('path').resolve(entryPoint));
   require('module').runMain();
 } else {
   // run the REPL, or run from stdin
