@@ -24,10 +24,17 @@ instance with a patched `require.extensions['.js']` function, which transparentl
 transpiles your ES6 code with Generators into ES5-compatible code. We can thank
 [`facebook/regenerator`][regenerator] for making this possible.
 
-Support for generators happens either through
-V8's native support (via the `--harmony_generators` flag when necessary,
-on node >= v0.11.3), or falling back to [`facebook/regenerator`][regenerator]
-emulation when no native support is available (node < v0.11.3).
+Under the hood, this command:
+
+``` bash
+$ gnode foo.js all the args
+```
+
+Turns into something like this:
+
+``` bash
+$ GNODE_ENTRY_POINT=foo.js node fallback.js all the args
+```
 
 #### node &gt;= 0.11.3
 
@@ -35,6 +42,18 @@ When V8 supports ES6 generators natively, then `gnode` invokes a node instance
 with the `--harmony-generators` flag passed in transparently, so that the native
 generators are used, and no transpiling takes place. Everything else _just works_
 as you would expect it to.
+
+Under the hood, this command:
+
+``` bash
+$ gnode foo.js all the args
+```
+
+Turns into something like this:
+
+``` bash
+$ node --harmony-generators foo.js all the args
+```
 
 
 Installation
