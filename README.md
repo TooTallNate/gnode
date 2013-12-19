@@ -106,4 +106,3 @@ var gen = require('./someGenerator');
 [suspend]: https://github.com/jmar777/suspend
 [generators]: http://wiki.ecmascript.org/doku.php?id=harmony:generators
 [regenerator]: https://github.com/facebook/regenerator
-
