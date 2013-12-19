@@ -29,7 +29,7 @@ V8's native support (via the `--harmony_generators` flag when necessary,
 on node >= v0.11.3), or falling back to [`facebook/regenerator`][regenerator]
 emulation when no native support is available (node < v0.11.3).
 
-#### node &gte; 0.11.3
+#### node &gt;= 0.11.3
 
 When V8 supports ES6 generators natively, then `gnode` invokes a node instance
 with the `--harmony-generators` flag passed in transparently, so that the native
