@@ -5,13 +5,36 @@ gnode
 
 `gnode` is a very light wrapper around your `node` executable that ensures
 [ES6 Generator][generators] support, even on versions of node that do not
-support ES6 Generators natively. Support for generators happens either through
+support ES6 Generators natively.
+
+You use it exactly like the regular `node` executable, except that you _do not_
+need to pass the `--harmony-generators` flag. That is where the magic happens.
+
+With `gnode` you can use [`co`][co] or [`suspend`][suspend], or any other
+Generator-based flow control based module, today!
+
+
+How does this magic work?
+-------------------------
+
+#### node &lt; 0.11.3
+
+When V8 provides no native ES6 generators support, then `gnode` invokes a node
+instance with a patched `require.extensions['.js']` function, which transparently
+transpiles your ES6 code with Generators into ES5-compatible code. We can thank
+[`facebook/regenerator`][regenerator] for making this possible.
+
+Support for generators happens either through
 V8's native support (via the `--harmony_generators` flag when necessary,
 on node >= v0.11.3), or falling back to [`facebook/regenerator`][regenerator]
 emulation when no native support is available (node < v0.11.3).
 
-With `gnode` you can use [`co`][co] or [`suspend`][suspend], or any other
-Generator-based flow control based module, today!
+#### node &gte; 0.11.3
+
+When V8 supports ES6 generators natively, then `gnode` invokes a node instance
+with the `--harmony-generators` flag passed in transparently, so that the native
+generators are used, and no transpiling takes place. Everything else _just works_
+as you would expect it to.
 
 
 Installation
