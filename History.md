@@ -1,4 +1,13 @@
 
+0.0.5 / 2013-12-19
+==================
+
+  * Upgrade regenerator dependency to v0.3.2 (@benjamn)
+  * README++
+  * fallback: make `process.argv` only have 1 entry in the repl
+  * index: don't add the global require .js hook in some cases
+  * index: match the strip shebang logic from `lib/module.js`
+
 0.0.4 / 2013-11-11
 ==================
 
