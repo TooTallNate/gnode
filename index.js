@@ -14,6 +14,7 @@ if (!hasNativeGenerators() && !isPatchedByGnode()) {
 
   var fs = require('fs');
   var regenerator = require('regenerator');
+  var genFunExp = /\bfunction\s*\*/;
 
   /**
    * First include the regenerator runtime. It gets installed gloablly as
@@ -50,12 +51,23 @@ function gnodeJsExtensionCompiler (module, filename) {
   // strip away the shebang if present
   content = stripShebang(content);
 
-  // compile JS via facebook/regenerator
-  content = regenerator(content, {
-    includeRuntime: 'function' != typeof wrapGenerator
-  });
+  if (genFunExp.test(content) && !isValid(content)) {
+    // compile JS via facebook/regenerator
+    content = regenerator(content, {
+      includeRuntime: 'function' != typeof wrapGenerator
+    });
+  }
 
   module._compile(content, filename);
+}
+
+function isValid(content) {
+  try {
+    Function('', content);
+    return true;
+  } catch (ex) {
+    return false;
+  }
 }
 
 /**
