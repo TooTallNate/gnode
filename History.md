@@ -1,4 +1,10 @@
 
+0.0.6 / 2014-01-06
+==================
+
+  * Never compile code that is already valid (#6, @ForbesLindesay)
+  * package: update "regenerator" to v0.3.4
+
 0.0.5 / 2013-12-19
 ==================
 
