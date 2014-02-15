@@ -25,7 +25,7 @@
     "url": "https://github.com/TooTallNate/gnode/issues"
   },
   "dependencies": {
-    "regenerator": "~0.4.1"
+    "regenerator": "0"
   },
   "devDependencies": {
     "co": "~2.1.0",
