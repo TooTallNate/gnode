@@ -88,7 +88,7 @@ describe('command line interface', function () {
     });
   });
 
-  cli(['-p', 'function *test () {yield 3}; test().next().value;'], 'should print result with -p', function (child, done) {
+  if (!/^v0.8/.test(process.version)) cli(['-p', 'function *test () {yield 3}; test().next().value;'], 'should print result with -p', function (child, done) {
     var async = 2
     buffer(child.stdout, function (err, data) {
       if (err) return done(err);
@@ -128,7 +128,7 @@ describe('command line interface', function () {
     });
   });
 
-  cli(['-p', 'JSON.stringify(process.argv)', 'a', 'b', 'c'], 'should pass additional arguments after -p', function (child, done) {
+  cli(['-e', 'console.log(JSON.stringify(process.argv))', 'a', 'b', 'c'], 'should pass additional arguments after -e', function (child, done) {
     var async = 2
     buffer(child.stdout, function (err, data) {
       if (err) return done(err);
