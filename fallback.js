@@ -74,7 +74,13 @@ function gnodeEval (code, context, file, fn) {
     code = regenerator(code, {
       includeRuntime: 'function' != typeof wrapGenerator
     });
-
+  } catch (e) {
+    // Treat regenerator errors as syntax errors in repl.
+    // A hack to have repl interpret certain js structures correctly.
+    e.name = 'SyntaxError'
+    err = e;
+  }
+  try {
     if (this.useGlobal) {
       result = vm.runInThisContext(code, file);
     } else {
