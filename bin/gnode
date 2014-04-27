@@ -38,7 +38,6 @@ hasGenerators(function (err, has) {
         argv.push(code)
         // skip arg, we just processed it
         i++
-        argsStart++
       }
     } else {
       // must be the script file

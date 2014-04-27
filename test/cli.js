@@ -127,6 +127,20 @@ describe('command line interface', function () {
       --async || done();
     });
   });
+
+  cli(['-p', 'JSON.stringify(process.argv)', 'a', 'b', 'c'], 'should pass additional arguments after -p', function (child, done) {
+    var async = 2
+    buffer(child.stdout, function (err, data) {
+      if (err) return done(err);
+      data = JSON.parse(data)
+      assert.deepEqual(['a', 'b', 'c'], data.slice(2))
+      --async || done();
+    });
+    child.on('exit', function (code) {
+      assert(code == 0, 'gnode quit with exit code: ' + code);
+      --async || done();
+    });
+  });
 });
 
 
