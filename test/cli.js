@@ -87,6 +87,46 @@ describe('command line interface', function () {
       done();
     });
   });
+
+  cli(['-p', 'function *test () {yield 3}; test().next().value;'], 'should print result with -p', function (child, done) {
+    var async = 2
+    buffer(child.stdout, function (err, data) {
+      if (err) return done(err);
+      assert('3' == data.trim(), 'gnode printed ' + data);
+      --async || done();
+    });
+    child.on('exit', function (code) {
+      assert(code == 0, 'gnode quit with exit code: ' + code);
+      --async || done();
+    });
+  });
+
+  cli(['-e', 'function *test () {yield 3}; console.log(test().next().value);'], 'should print result with -p', function (child, done) {
+    var async = 2
+    buffer(child.stdout, function (err, data) {
+      if (err) return done(err);
+      assert('3' == data.trim(), 'expected 3, got: ' + data);
+      --async || done();
+    });
+
+    child.on('exit', function (code) {
+      assert(code == 0, 'gnode quit with exit code: ' + code);
+      --async || done();
+    });
+  });
+
+  cli(['--harmony_generators', '-e', 'function *test () {yield 3}; console.log(test().next().value);'], 'should print result with -e', function (child, done) {
+    var async = 2
+    buffer(child.stdout, function (err, data) {
+      if (err) return done(err);
+      assert('3' == data.trim(), 'gnode printed ' + data);
+      --async || done();
+    });
+    child.on('exit', function (code) {
+      assert(code == 0, 'gnode quit with exit code: ' + code);
+      --async || done();
+    });
+  });
 });
 
 

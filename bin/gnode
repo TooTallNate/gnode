@@ -4,6 +4,8 @@ var spawn = require('child_process').spawn;
 var node = process.execPath || process.argv[0];
 var HG = '--harmony_generators';
 
+var regenerator = require('regenerator')
+
 // first check if the current node executable has "Generators".
 // if not, fall back to facebook/regenerator for Generators support.
 hasGenerators(function (err, has) {
@@ -22,7 +24,22 @@ hasGenerators(function (err, has) {
       if (!/^--harmony[_-]generators$/.test(arg)) {
         argv.push(arg);
       }
+
       argsStart++;
+
+      if (/^-[ep]$/.test(arg)) {
+        // handle gnode -e|-p "console.log('script')"
+        var code = process.argv[i + 1]
+        if (!has) {
+          code = regenerator(code, {
+            includeRuntime: true
+          });
+        }
+        argv.push(code)
+        // skip arg, we just processed it
+        i++
+        argsStart++
+      }
     } else {
       // must be the script file
       break;
