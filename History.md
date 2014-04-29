@@ -1,4 +1,10 @@
 
+0.0.8 / 2014-04-28
+==================
+
+  * bin: fix repl erroring on valid code (@timoxley, #10)
+  * bin: make gnode -p &/or gnode -e work properly (@timoxley, #2, #9)
+
 0.0.7 / 2014-02-14
 ==================
 
