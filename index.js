@@ -22,7 +22,7 @@ if (!hasNativeGenerators() && !isPatchedByGnode()) {
    * available.
    */
 
-  require('vm').runInThisContext(regenerator('', { includeRuntime: true }));
+  regenerator.runtime();
 
   /**
    * Entry point for node versions that don't have Generator support.
@@ -53,9 +53,9 @@ function gnodeJsExtensionCompiler (module, filename) {
 
   if (genFunExp.test(content) && !isValid(content)) {
     // compile JS via facebook/regenerator
-    content = regenerator(content, {
+    content = regenerator.compile(content, {
       includeRuntime: 'function' != typeof wrapGenerator
-    });
+    }).code;
   }
 
   module._compile(content, filename);

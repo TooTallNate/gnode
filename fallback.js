@@ -71,9 +71,9 @@ function gnodeEval (code, context, file, fn) {
   var err, result;
   try {
     // compile JS via facebook/regenerator
-    code = regenerator(code, {
+    code = regenerator.compile(code, {
       includeRuntime: 'function' != typeof wrapGenerator
-    });
+    }).code;
   } catch (e) {
     // Treat regenerator errors as syntax errors in repl.
     // A hack to have repl interpret certain js structures correctly.
@@ -105,9 +105,9 @@ function evalScript (name) {
   var script = process._eval;
 
   // compile JS via facebook/regenerator
-  script = regenerator(script, {
+  script = regenerator.compile(script, {
     includeRuntime: 'function' != typeof wrapGenerator
-  });
+  }).code;
 
   if (!Module._contextLoad) {
     var body = script;
