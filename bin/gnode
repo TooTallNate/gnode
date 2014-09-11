@@ -31,9 +31,9 @@ hasGenerators(function (err, has) {
         // handle gnode -e|-p "console.log('script')"
         var code = process.argv[i + 1]
         if (!has) {
-          code = regenerator(code, {
+          code = regenerator.compile(code, {
             includeRuntime: true
-          });
+          }).code;
         }
         argv.push(code)
         // skip arg, we just processed it
