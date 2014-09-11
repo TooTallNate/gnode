@@ -18,11 +18,11 @@ if (!hasNativeGenerators() && !isPatchedByGnode()) {
 
   /**
    * First include the regenerator runtime. It gets installed gloablly as
-   * `wrapGenerator`, so we just need to make sure that global function is
-   * available.
+   * `regeneratorRuntime`, so we just need to make sure that global
+   * function is available.
    */
 
-  require('vm').runInThisContext(regenerator('', { includeRuntime: true }));
+  regenerator.runtime();
 
   /**
    * Entry point for node versions that don't have Generator support.
@@ -53,9 +53,9 @@ function gnodeJsExtensionCompiler (module, filename) {
 
   if (genFunExp.test(content) && !isValid(content)) {
     // compile JS via facebook/regenerator
-    content = regenerator(content, {
-      includeRuntime: 'function' != typeof wrapGenerator
-    });
+    content = regenerator.compile(content, {
+      includeRuntime: 'object' !== typeof regeneratorRuntime
+    }).code;
   }
 
   module._compile(content, filename);
