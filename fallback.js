@@ -3,7 +3,7 @@
  * A lot of this entry file is based off of node's src/node.js.
  */
 
-var regenerator = require('regenerator');
+var compile = require('./compile');
 
 // grab a reference to the entry point script, then clean up the env
 var entryPoint = process.env.GNODE_ENTRY_POINT;
@@ -71,9 +71,7 @@ function gnodeEval (code, context, file, fn) {
   var err, result;
   try {
     // compile JS via facebook/regenerator
-    code = regenerator.compile(code, {
-      includeRuntime: 'object' !== typeof regeneratorRuntime
-    }).code;
+    code = compile(code);
   } catch (e) {
     // Treat regenerator errors as syntax errors in repl.
     // A hack to have repl interpret certain js structures correctly.
@@ -105,9 +103,7 @@ function evalScript (name) {
   var script = process._eval;
 
   // compile JS via facebook/regenerator
-  script = regenerator.compile(script, {
-    includeRuntime: 'object' !== typeof regeneratorRuntime
-  }).code;
+  script = compile(script);
 
   if (!Module._contextLoad) {
     var body = script;

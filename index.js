@@ -13,6 +13,7 @@ if (!hasNativeGenerators() && !isPatchedByGnode()) {
    */
 
   var fs = require('fs');
+  var compile = require('./compile');
   var regenerator = require('regenerator');
   var genFunExp = /\bfunction\s*\*/;
 
@@ -53,9 +54,7 @@ function gnodeJsExtensionCompiler (module, filename) {
 
   if (genFunExp.test(content) && !isValid(content)) {
     // compile JS via facebook/regenerator
-    content = regenerator.compile(content, {
-      includeRuntime: 'object' !== typeof regeneratorRuntime
-    }).code;
+    content = compile(content);
   }
 
   module._compile(content, filename);
