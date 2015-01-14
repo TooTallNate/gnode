@@ -2,7 +2,7 @@
 0.1.0 / 2014-09-12
 ==================
 
- * package: update "regenerator" to v0.6.3 (@benjamn, #13)
+  * package: update "regenerator" to v0.6.3 (@benjamn, #13)
 
 0.0.8 / 2014-04-28
 ==================
@@ -33,11 +33,11 @@
 0.0.4 / 2013-11-11
 ==================
 
- * gnode: fix entering the REPL with other flags are passed in as well
- * gnode: print out the args for debugging purposes with GNODE_PRINT_ARGS
- * gnode: proxy the exit code from the child node process
- * test: initial CLI tests
- * index: strip away the hashbang before feeding the script to esprima
+  * gnode: fix entering the REPL with other flags are passed in as well
+  * gnode: print out the args for debugging purposes with GNODE_PRINT_ARGS
+  * gnode: proxy the exit code from the child node process
+  * test: initial CLI tests
+  * index: strip away the hashbang before feeding the script to esprima
 
 0.0.3 / 2013-10-31
 ==================
