@@ -1,4 +1,10 @@
 
+0.1.1 / 2015-01-14
+==================
+
+  * package: upgrade regenerator to v0.8.8 (#18, @popomore)
+  * travis: use "strings" for version numbers
+
 0.1.0 / 2014-09-12
 ==================
 
