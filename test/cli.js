@@ -101,7 +101,7 @@ describe('command line interface', function () {
     });
   });
 
-  cli(['-e', 'function *test () {yield 3}; console.log(test().next().value);'], 'should print result with -p', function (child, done) {
+  cli(['-e', 'function *test () {yield 3}; console.log(test().next().value);'], 'should print result with -e', function (child, done) {
     var async = 2
     buffer(child.stdout, function (err, data) {
       if (err) return done(err);
