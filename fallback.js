@@ -4,6 +4,9 @@
  */
 
 var regenerator = require('regenerator');
+var path = require('path');
+var childProcess = require('child_process');
+var fallbackScriptPath = process.argv[1];
 
 // grab a reference to the entry point script, then clean up the env
 var entryPoint = process.env.GNODE_ENTRY_POINT;
@@ -12,21 +15,38 @@ delete process.env.GNODE_ENTRY_POINT;
 // load the custom `.js` ES6 Generator compiler
 require('./index.js');
 
-// overwrite process.execPath and process.argv[0] with the
-// absolute path to the gnode binary
-process.execPath = process.argv[0] = require('path').resolve(__dirname, 'bin', 'gnode');
+// we hook child_process.fork so it can handle modules that contain generator syntax
+var originalFork = childProcess.fork;
+childProcess.fork = function(modulePath, args, options) {
+  // the passed moudle will be the entry point
+  options.env.GNODE_ENTRY_POINT = modulePath;
 
-// remove "fallback.js" from `process.argv`
-process.argv.splice(1, 1);
+  // we set the module path to fallback.js so it can compile the entry point
+  modulePath = fallbackScriptPath;
+
+  var child = originalFork.apply(this, arguments);
+  delete options.env.GNODE_ENTRY_POINT;
+  return child;
+};
+
+// if the cluster module is loaded, then cluster.fork would use the un-hooked
+// version of child_process.fork, we don't want that so invalidate the cache
+// and re-load it
+if (require.cache['cluster']) {
+  delete require.cache['cluster'];
+  require('cluster');
+}
 
 if (process._eval != null) {
   // User passed '-e' or '--eval' arguments to Node.
   evalScript('[eval]');
 } else if (entryPoint) {
-  // replace `process.argv[1]` with the expected path value,
-  // and re-run Module.runMain()
-  process.argv.splice(1, 0, require('path').resolve(entryPoint));
+  // we replace fallback.js (the value in process.argv[1]) with the entry point
+  // and re-run Module.runMain() so it will load it
+  process.argv[1] = path.resolve(entryPoint);
   require('module').runMain();
+  // undo the replacment
+  process.argv[1] = fallbackScriptPath;
 } else {
   // run the REPL, or run from stdin
 
@@ -96,7 +116,6 @@ function gnodeEval (code, context, file, fn) {
 // copied (almost) directly from joyent/node's src/node.js
 function evalScript (name) {
   var Module = require('module');
-  var path = require('path');
   var cwd = process.cwd();
 
   var module = new Module(name);
