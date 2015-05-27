@@ -8,8 +8,7 @@ var spawn = require('child_process').spawn;
 
 // node executable
 var node = process.execPath || process.argv[0];
-var gnode = path.resolve(__dirname, '..', 'bin', 'gnode');
-var mocha = path.resolve(__dirname, '..', 'node_modules', '.bin', 'mocha');
+var mocha = path.resolve(__dirname, '..', 'node_modules', 'mocha', 'bin', 'mocha');
 var mochaOpts = [ '--reporter', 'spec' ];
 
 run([
