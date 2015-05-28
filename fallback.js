@@ -18,6 +18,8 @@ require('./index.js');
 // we hook child_process.fork so it can handle modules that contain generator syntax
 var originalFork = childProcess.fork;
 childProcess.fork = function(modulePath, args, options) {
+  options = options || {};
+  options.env = options.env || process.env;
   // the passed moudle will be the entry point
   options.env.GNODE_ENTRY_POINT = modulePath;
 
