@@ -141,12 +141,26 @@ describe('command line interface', function () {
       --async || done();
     });
   });
+  cli([ 'clusterfork.js' ], 'should spawn a new worker process', function (child, done) {
+    buffer(child.stdout, function (err, data) {
+      if (err) return done(err);
+      data = (data || '').trim();
+      assert('cluster.fork works!' === data, "master process didn't receive creation message from worker (master's output: '" + data + "')");
+      done();
+    });
+  }, 4000, 2000);
 });
 
 
-function cli (argv, name, fn) {
+function cli (argv, name, fn, timeout, slow) {
   describe('gnode ' + argv.join(' '), function () {
     it(name, function (done) {
+      if (timeout !== undefined) {
+        this.timeout(timeout);
+      }
+      if (slow !== undefined) {
+        this.slow(slow);
+      }
       var child = spawn(node, [ gnode ].concat(argv));
       fn(child, done);
     });
