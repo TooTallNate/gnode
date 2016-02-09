@@ -1,4 +1,12 @@
 
+0.1.2 / 2016-02-08
+==================
+
+  * travis: test lots more node versions
+  * README: use SVG for Travis-CI badge
+  * test: fix `npm test` failing to run (#21, @etiktin)
+  * test: fix typo in test case name
+
 0.1.1 / 2015-01-14
 ==================
 
