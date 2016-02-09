@@ -31,7 +31,7 @@ describe('command line interface', function () {
 
   cli([ '--help' ], 'should output the "help" display', function (child, done) {
     buffer(child.stdout, function (err, data) {
-      assert(/^Usage\: node/.test(data));
+      assert(/^Usage\: (node|iojs)/.test(data));
       done();
     });
   });
