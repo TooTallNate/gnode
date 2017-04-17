@@ -87,7 +87,7 @@ co(function* () {
     console.log(i);
     yield sleep(1000);
   }
-})();
+});
 ```
 
 This script with an ES6 Generator in it can be run using any version of node
